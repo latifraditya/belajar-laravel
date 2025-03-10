@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 
 class AdminCategoryController extends Controller
 {
@@ -78,7 +80,24 @@ class AdminCategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+      
+      $validatedData = $request->validate([
+        'id' => 'required|exists:categories,id', // Pastikan ID valid
+        'name' => 'required|max:255'
+    ]);
+
+    // Cari kategori berdasarkan ID
+    $category = Category::find($request->id);
+    if (!$category) {
+        return response()->json(['error' => 'Kategori tidak ditemukan'], 404);
+    }
+
+    // Update nama kategori
+    $category->name = $validatedData['name'];
+    $category->save();
+
+    return response()->json(['success' => 'Kategori berhasil diperbarui', 'data' => $category]);
+      
     }
 
     /**
@@ -89,6 +108,8 @@ class AdminCategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        // dd('kategori ditemukan',$category);
+        Category::destroy($category->id);
+        return redirect('/dashboard/categories')->with('success','Category has been deleted');
     }
 }

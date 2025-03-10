@@ -1,10 +1,9 @@
 @extends('dashboard.layouts.main')
 
-
 @section('container')
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">{{ auth()->user()->name }}'s Post</h1>
+  <h1 class="h2">Users</h1>
 </div>
 
 <style>
@@ -31,55 +30,42 @@
 </style>
 
 @if(session()->has('success'))
-  <div class="alert alert-success col-lg-8" role="alert">
+  <div class="alert alert-success col-lg-6" role="alert">
     {{ session('success') }}
   </div>
 @endif
 
-<div class="table-responsive col-lg-8">
-  <a href="/dashboard/posts/create" class="btn btn-primary mb3">Create New Post</a>
+<div class="table-responsive col-lg-6">
   <table class="table table-striped table-sm">
     <thead>
       <tr>
         <th scope="col">No</th>
-        <th scope="col">Title</th>
-        <th scope="col">Category</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
         <th scope="col">Action</th>
       </tr>
     </thead>
     <tbody>
-      @foreach ($posts as $post)
+      @foreach ($users as $user)
         <tr>
-          <td >{{ $loop->iteration }}</td>
-          <td >{{ $post->title }}</td>
-          <td >{{ $post->category->name }}</td>
+          <td>{{ $loop->iteration }}</td>
+          <td>{{ $user->name }}</td>
+          <td>{{ $user->email }}</td>
           <td>
-            
-            <a href="/dashboard/posts/{{ $post->slug }}" class="badge bg-info icon-hover" title="Lihat"><span data-feather="eye"></span></a>
-
-            
-            <a href="/dashboard/posts/{{ $post->slug }}/edit" class="badge bg-warning icon-hover" title="Edit"><span data-feather="edit"></span></a>
-            @can('admin')
-            <form action="/dashboard/posts/{{ $post->slug }}" method="post" class="d-inline">
-              @method('delete')
-              @csrf
-              <button class="badge bg-danger border-0 icon-hover" title="Delete" onclick="confirmDelete(event)"><span data-feather="trash"></span></button>
-            </form>
-            @endcan
+            <a href="/dashboard/users/{{ $user->id }}" class="badge bg-info icon-hover" style="text-decoration: none;padding: 10px 10px;">Details</a>
           </td>
         </tr>
       @endforeach
     </tbody>
   </table>
 </div>
-
 <script>
   function confirmDelete(event) {
       event.preventDefault(); // Mencegah form langsung dikirim
   
       Swal.fire({
           title: "Apakah Anda yakin?",
-          text: "Postingan ini akan dihapus dan tidak dapat dikembalikan!",
+          text: "Semua data postingan dalam kategori ini juga akan dihapus secara permanen!!!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#d33",
@@ -97,5 +83,5 @@
 
   
   </script>
-  
+
 @endsection

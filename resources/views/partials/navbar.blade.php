@@ -1,6 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="/">My Blog</a>
+        {{-- <a class="navbar-brand" href="/">NebulaCode</a> --}}
+        <a class="navbar-brand" href="/" style="font-family: 'Audiowide', sans-serif; font-weight: 700; letter-spacing: 1px;">
+          <img src="/img/nebulacode.jpg" alt="nebula" width="auto" height="25">
+          NebulaCode
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

@@ -1,15 +1,19 @@
 <?php
 
 use App\Http\Controllers\AdminCategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardPostController;
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +114,19 @@ Route::get('/dashboard', function(){
 Route::post('/dashboard/posts/checkSlug', [DashboardPostController::class, 'checkSlug'])->middleware('auth');
 
 
-Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
+// Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
 
-Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
+Route::resource('/dashboard/posts', DashboardPostController::class)
+    ->except(['destroy'])->middleware('auth');
+
+// ADMINISTRATOR
+Route::middleware('admin')->group(function () {
+  
+    Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
+    Route::delete('/dashboard/posts/{post}', [DashboardPostController::class, 'destroy'])->name('dashboard.posts.destroy');
+    Route::get('/dashboard/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/dashboard/users/{user}', [UserController::class, 'show']);
+    // Route::get('/dashboard', [DashboardController::class, 'index']);
+});
+Route::post('/dashboard/categories/update', [AdminCategoryController::class, 'update']);
+

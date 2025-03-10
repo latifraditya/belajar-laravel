@@ -151,5 +151,6 @@ class DashboardPostController extends Controller
         return response()->json(['slug' => $slug]);
     }
 
+
 }
 

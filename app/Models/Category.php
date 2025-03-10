@@ -15,4 +15,17 @@ class Category extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    public function getRouteKeyName()
+    {
+      return 'id';
+    }
+
+    protected static function boot() {
+      parent::boot();
+      static::deleting(function ($category) {
+        $category->posts()->delete(); // Hapus semua post yang terkait
+    });
+
+    }
 }

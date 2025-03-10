@@ -48,16 +48,16 @@
     <tbody>
       @foreach ($categories as $category)
         <tr>
-          <td>{{ $loop->iteration }}</td>
-          <td>{{ $category->name }}</td>
+          <td class="text-center">{{ $loop->iteration }}</td>
           <td>
-            
-            <a href="/dashboard/categories/{{ $category->slug }}" class="badge bg-info icon-hover" title="Lihat"><span data-feather="eye"></span></a>
-            <a href="/dashboard/categories/{{ $category->slug }}/edit" class="badge bg-warning icon-hover" title="Edit"><span data-feather="edit"></span></a>
-            <form action="/dashboard/categories/{{ $category->slug }}" method="post" class="d-inline">
+            <input type="text" class="form-control edit-category" style="height: 30px;"
+                   value="{{ $category->name }}">
+          </td>
+          <td>
+            <form action="/dashboard/categories/{{ $category->id }}" method="post" class="d-inline">
               @method('delete')
               @csrf
-              <button class="badge bg-danger border-0 icon-hover" title="Delete" onclick="return confirm('Are you sure?')"><span data-feather="trash"></span></button>
+              <button class="badge bg-danger border-0 icon-hover" title="Delete" onclick=confirmDelete(event)><span data-feather="trash"></span></button>
             </form>
           </td>
         </tr>
@@ -65,5 +65,59 @@
     </tbody>
   </table>
 </div>
+<script>
+  function confirmDelete(event) {
+    event.preventDefault(); // Mencegah form langsung dikirim
+
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Semua data postingan dalam kategori ini juga akan dihapus secara permanen!!!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            event.target.closest("form").submit(); // Mengirimkan form yang benar
+        }
+    });
+}
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof jQuery !== "undefined") {
+      $(document).on("keypress", ".edit-category", function (e) {
+        if (e.which == 13) { // Jika Enter ditekan
+          e.preventDefault();
+
+          let categoryId = $(this).data("id");
+          let newName = $(this).val();
+
+          $.ajax({
+            url: "/dashboard/categories/update",
+            type: "POST",
+            data: {
+              _token: "{{ csrf_token() }}",
+              id: categoryId,
+              name: newName
+            },
+            success: function () {
+              alert("Kategori berhasil diperbarui!");
+            },
+            error: function () {
+              alert("Gagal memperbarui kategori!");
+            }
+          });
+        }
+      });
+    }
+  });
+</script>
+
 
 @endsection
