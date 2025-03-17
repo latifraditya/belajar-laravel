@@ -13,6 +13,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardPostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SupermarketController;
 
 
 /*
@@ -126,7 +128,22 @@ Route::middleware('admin')->group(function () {
     Route::delete('/dashboard/posts/{post}', [DashboardPostController::class, 'destroy'])->name('dashboard.posts.destroy');
     Route::get('/dashboard/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/dashboard/users/{user}', [UserController::class, 'show']);
+    Route::post('/dashboard/categories/update', [AdminCategoryController::class, 'update']);
     // Route::get('/dashboard', [DashboardController::class, 'index']);
 });
-Route::post('/dashboard/categories/update', [AdminCategoryController::class, 'update']);
 
+
+Route::resource('/dashboard/sales', SaleController::class);
+
+// **********************
+// Supermarket
+// **********************
+
+// Route::resource('/dashboard/supermarkets', SupermarketController::class);
+// Route::get('/dashboard/supermarkets/chart', [SupermarketController::class, 'chart'])->name('supermarkets.chart');
+Route::prefix('/dashboard/supermarkets')->group(function () {
+  Route::get('/chart', [SupermarketController::class, 'chart'])->name('supermarkets.chart');
+  Route::resource('/', SupermarketController::class);
+  Route::get('/exportPdf', [SupermarketController::class, 'exportPdf'])->name('supermarkets.exportPdf');
+  Route::get('/exportExcel', [SupermarketController::class, 'exportExcel'])->name('supermarkets.exportExcel');
+});

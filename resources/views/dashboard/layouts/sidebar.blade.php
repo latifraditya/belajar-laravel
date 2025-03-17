@@ -13,6 +13,20 @@
           My Post
         </a>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ Request::is('dashboard/sales*') ? 'active' : '' }}" aria-current="page" href="/dashboard/sales">
+          <span data-feather="monitor"></span>
+          Laptop Price
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ Request::is('dashboard/supermarkets*') ? 'active' : '' }}" aria-current="page" href="/dashboard/supermarkets">
+          <span data-feather="shopping-cart"></span>
+          Supermarket Sales
+        </a>
+      </li>
     </ul>
 
     @can('admin')
